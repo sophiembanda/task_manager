@@ -74,11 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-container">
         <h2 class="title">Task Manager Login</h2>
         
-        <!-- <div class="demo-info">
-            <strong>Demo Accounts:</strong><br>
-            Admin: username: <code>admin</code>, password: <code>admin123</code><br>
-            User: username: <code>john_doe</code>, password: <code>user123</code>
-        </div> -->
         
         <?php if ($error): ?>
             <div class="error"><?= htmlspecialchars($error) ?></div>

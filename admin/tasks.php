@@ -1,6 +1,7 @@
 <?php
 require_once '../config/config.php';
 require_once '../config/database.php';
+require_once '../config/email.php';
 
 // Check if user is logged in and is admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -32,8 +33,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $conn->prepare("INSERT INTO tasks (title, description, assigned_to, created_by, deadline) VALUES (?, ?, ?, ?, ?)");
                 
                 if ($stmt->execute([$title, $description, $assigned_to, $_SESSION['user_id'], $deadline ?: null])) {
-                    $message = 'Task created successfully';
-                    $messageType = 'success';
+                    // Get assigned user's email and info for notification
+                    $stmt = $conn->prepare("SELECT email, full_name FROM users WHERE id = ?");
+                    $stmt->execute([$assigned_to]);
+                    $assigned_user = $stmt->fetch();
+                    
+                    // Get creator's name
+                    $stmt = $conn->prepare("SELECT full_name FROM users WHERE id = ?");
+                    $stmt->execute([$_SESSION['user_id']]);
+                    $creator = $stmt->fetch();
+                    
+                    // Send email notification
+                    $emailService = new EmailService();
+                    $email_sent = $emailService->sendTaskAssignment(
+                        $assigned_user['email'],
+                        $assigned_user['full_name'],
+                        $title,
+                        $description,
+                        $deadline,
+                        $creator['full_name']
+                    );
+                    
+                    if ($email_sent) {
+                        $message = 'Task created successfully and notification email sent';
+                        $messageType = 'success';
+                    } else {
+                        $message = 'Task created successfully, but failed to send notification email';
+                        $messageType = 'success'; // Still success since task was created
+                    }
                 } else {
                     $message = 'Failed to create task';
                     $messageType = 'error';
@@ -152,6 +179,7 @@ $tasks = $stmt->fetchAll();
             <div>
                 <a href="../index.php" class="btn">Back to Dashboard</a>
                 <a href="users.php" class="btn">Manage Users</a>
+                <a href="email_test.php" class="btn">Test Email</a>
                 <a href="../logout.php" class="btn btn-danger">Logout</a>
             </div>
         </div>

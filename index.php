@@ -70,6 +70,7 @@ if (!$user) {
                 <p>You have full access to manage users and tasks.</p>
                 <a href="admin/users.php" class="btn">Manage Users</a>
                 <a href="admin/tasks.php" class="btn">Manage Tasks</a>
+                <a href="admin/email_test.php" class="btn">Test Email</a>
             <?php else: ?>
                 <h2>User Dashboard</h2>
                 <p>View and manage your assigned tasks.</p>

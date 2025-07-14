@@ -48,14 +48,19 @@ files/
 cache/
 .cache/
 
-# Environment files
+# Environment files (IMPORTANT: Never commit these!)
 .env
 .env.local
 .env.production
+.env.development
+.env.example
 
 # Backup files
 *.bak
 *backup*
 
-# Debug file we created for testing
+# Development/testing files
 debug.php
+validate_env.php
+check_mail_config.php
+phpinfo.php

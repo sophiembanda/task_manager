@@ -25,9 +25,10 @@ A comprehensive task management system built with PHP and MySQL, featuring user 
 ## Requirements
 
 - **PHP**: 7.4 or higher
-- **MySQL**: 5.7 or higher (or MariaDB)
+- **MySQL**: 5.7 or higher (or MariaDB)  
 - **Web Server**: Apache/Nginx
 - **XAMPP**: Recommended for local development
+- **Email Server**: SMTP server or MailHog for development
 
 ## Installation
 
@@ -77,14 +78,36 @@ CREATE TABLE tasks (
 );
 ```
 
-### 4. Configure Database Connection
-Update `config/database.php` with your MySQL settings:
-```php
-private $host = 'localhost';
-private $dbname = 'task_manager';
-private $username = 'root';
-private $password = ''; // Your MySQL password
-```
+### 4. Environment Configuration
+1. **Copy the environment file:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Edit `.env` with your settings:**
+   ```env
+   # Database Configuration
+   DB_HOST=localhost
+   DB_PORT=3307
+   DB_NAME=task_manager
+   DB_USERNAME=root
+   DB_PASSWORD=your-mysql-password
+
+   # Email Configuration (for notifications)
+   SMTP_ENABLED=true
+   GMAIL_USERNAME=your-email@gmail.com
+   GMAIL_PASSWORD=your-app-password
+   FROM_EMAIL=your-email@gmail.com
+   FROM_NAME=Task Manager System
+
+   # Application Configuration
+   BASE_URL=http://localhost/task_manager/
+   APP_ENV=development
+   ```
+
+3. **Test email configuration:**
+   - For development: Use MailHog (see EMAIL_SETUP.md)
+   - For production: Configure real SMTP server
 
 ### 5. Access the Application
 1. Navigate to `http://localhost/task_manager/`
